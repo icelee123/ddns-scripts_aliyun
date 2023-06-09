@@ -108,20 +108,37 @@ aliyun_transfer() {
 	done
 }
 
+
 # 百分号编码
+#percentEncode() {
+#	if [ -z "${1//[A-Za-z0-9_.~-]/}" ]; then
+#		echo -n "$1"
+#	else
+#		local string=$1; local i=0; local ret chr
+#		while [ $i -lt ${#string} ]; do
+#			chr=${string:$i:1}
+#			[ -z "${chr#[^A-Za-z0-9_.~-]}" ] && chr=$(printf '%%%02X' "'$chr")
+#			ret="$ret$chr"
+#			i=$(( $i + 1 ))
+#		done
+#		echo -n "$ret"
+#	fi
+#}
+#-----------------------------------
+
+url_encode() {
+	local __ENCODED
+	__ENCODED="$(awk -v str="$1" 'BEGIN{ORS="";for(i=32;i<=127;i++)lookup[sprintf("%c",i)]=i
+		for(k=1;k<=length(str);++k){enc=substr(str,k,1);if(enc!~"[-_.~a-zA-Z0-9]")enc=sprintf("%%%02X", lookup[enc]);print enc}}')"
+	 printf %s "$__ENCODED"
+}
+				  
 percentEncode() {
-	if [ -z "${1//[A-Za-z0-9_.~-]/}" ]; then
-		echo -n "$1"
-	else
-		local string=$1; local i=0; local ret chr
-		while [ $i -lt ${#string} ]; do
-			chr=${string:$i:1}
-			[ -z "${chr#[^A-Za-z0-9_.~-]}" ] && chr=$(printf '%%%02X' "'$chr")
-			ret="$ret$chr"
-			i=$(( $i + 1 ))
-		done
-		echo -n "$ret"
-	fi
+	local __ENCODED="$(url_encode $1)"
+        __ENCODED="${__ENCODED//+/%20}"
+        __ENCODED="${__ENCODED//\*/%2A}"
+        __ENCODED="${__ENCODED//%7E/\~}"
+        printf %s "$__ENCODED"
 }
 
 # 构造阿里云解析请求参数
