@@ -1,4 +1,9 @@
 # ddns-scripts_aliyun
+
+#### 原版本百分号编码存在一些问题，会导致多出一些'0'字符。
+#### 本版本替换为 [starsunyzl/ddns-scripts-alibabacloud](https://github.com/starsunyzl/ddns-scripts-alibabacloud/blob/main/usr/lib/ddns/update_alibabacloud_com.sh) 中的百分号编码实现，经测试可正常运行。
+
+-----------------------------------------------------
 适用于 OpenWRT/LEDE 自带DDNS客户端的阿里云更新脚本
 
 依赖: ddns-scripts wget openssl-util
